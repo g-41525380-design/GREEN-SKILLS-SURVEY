@@ -89,6 +89,12 @@
               <span data-i18n="savedLabel">Disimpan Automatik</span>
             </span>
           </div>
+          <h1 class="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1 mt-0.5">
+            Kerangka Kemahiran Hijau TVET Elektronik
+          </h1>
+        </div>
+      </div>
+
       <!-- Right Controls: Language Toggle, Google Sheets Setup & Question Navigator -->
       <div class="flex items-center gap-2">
         <!-- Language Toggle Buttons -->
@@ -453,6 +459,12 @@
         <div id="review-sections-summary" class="space-y-4">
           <!-- Populated dynamically -->
         </div>
+
+        <!-- Submit Action Bar -->
+        <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-xs text-slate-500">
+            Dengan menghantar borang ini, anda bersetuju maklum balas digunakan untuk tujuan penyelidikan akademik PhD UTHM.
+          </p>
           <button type="button" id="btn-submit-survey" onclick="submitSurvey()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-ecoGreen to-emerald-600 hover:from-green-800 hover:to-emerald-700 text-white font-bold text-base shadow-lg shadow-green-900/20 transition-all cursor-pointer disabled:opacity-60 disabled:pointer-events-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
