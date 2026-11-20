@@ -89,13 +89,7 @@
               <span data-i18n="savedLabel">Disimpan Automatik</span>
             </span>
           </div>
-          <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight line-clamp-1">
-            Kerangka Kemahiran Hijau TVET Elektronik
-          </h1>
-        </div>
-      </div>
-
-      <!-- Right Controls: Language Toggle & Question Navigator -->
+      <!-- Right Controls: Language Toggle, Google Sheets Setup & Question Navigator -->
       <div class="flex items-center gap-2">
         <!-- Language Toggle Buttons -->
         <div class="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200" role="group" aria-label="Pilihan Bahasa">
@@ -109,6 +103,12 @@
             EN
           </button>
         </div>
+
+        <!-- Google Sheets Setup Button -->
+        <button type="button" id="btn-open-gsheet-setup" onclick="toggleGSheetModal(true)" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-50 border border-emerald-300 text-ecoGreen hover:bg-emerald-100 transition-all shadow-sm cursor-pointer" title="Tetapan Google Sheets">
+          <span id="gsheet-status-dot" class="w-2 h-2 rounded-full bg-amber-500"></span>
+          <span class="hidden md:inline">Google Sheets</span>
+        </button>
 
         <!-- Question Navigator Trigger Button -->
         <button type="button" id="btn-open-navigator" onclick="toggleNavigatorModal(true)" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-uthmPurple transition-all shadow-sm cursor-pointer">
@@ -314,9 +314,16 @@
 
           <!-- Primary CTA Button -->
           <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p class="text-xs text-slate-500">
-              Tip: Anda boleh menjawab satu soalan demi satu menggunakan tetikus, skrin sentuh, atau papan kekunci (kekunci <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[11px] font-mono">1</kbd>-<kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[11px] font-mono">5</kbd>).
-            </p>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="toggleGSheetModal(true)" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-ecoGreen border border-emerald-300 text-xs font-bold transition-all cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Tetapan Google Sheets / Google Sheets Setup</span>
+              </button>
+              <span id="welcome-gsheet-indicator" class="text-xs font-medium text-slate-500"></span>
+            </div>
             <button type="button" id="btn-start-survey" onclick="startSurvey()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-uthmPurple to-ecoGreen hover:from-uthmPurpleDark hover:to-green-800 text-white font-bold text-base shadow-lg shadow-purple-900/20 hover:shadow-xl transform hover:-translate-y-0.5 transition-all cursor-pointer">
               <span>Mula Soal Selidik / Start Survey</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -446,18 +453,11 @@
         <div id="review-sections-summary" class="space-y-4">
           <!-- Populated dynamically -->
         </div>
-
-        <!-- Submit Action Bar -->
-        <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <button type="button" onclick="jumpToQuestion(0)" class="w-full sm:w-auto px-5 py-3 rounded-2xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors cursor-pointer">
-            Semak Dari Soalan Pertama
-          </button>
-
-          <button type="button" id="btn-submit-survey" onclick="submitSurvey()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-ecoGreen to-emerald-600 hover:from-green-800 hover:to-emerald-700 text-white font-bold text-base shadow-lg shadow-green-900/20 transition-all cursor-pointer">
+          <button type="button" id="btn-submit-survey" onclick="submitSurvey()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-ecoGreen to-emerald-600 hover:from-green-800 hover:to-emerald-700 text-white font-bold text-base shadow-lg shadow-green-900/20 transition-all cursor-pointer disabled:opacity-60 disabled:pointer-events-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-            <span>Hantar Soal Selidik / Submit Survey</span>
+            <span id="btn-submit-label">Hantar Jawapan / Submit Responses</span>
           </button>
         </div>
       </div>
@@ -478,10 +478,18 @@
           <p class="text-sm sm:text-base text-green-100 mt-2 max-w-2xl mx-auto">
             Thank you for taking the time to complete this survey. Maklum balas kepakaran anda amat bermakna bagi pembangunan Kerangka Kemahiran Hijau Program Teknologi Elektronik TVET di Kolej Vokasional Malaysia.
           </p>
-          <div id="submission-timestamp" class="inline-block mt-4 px-3.5 py-1 rounded-full bg-black/20 text-xs font-mono"></div>
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-4">
+            <div id="submission-timestamp" class="px-3.5 py-1 rounded-full bg-black/20 text-xs font-mono"></div>
+            <div id="respondent-id-badge" class="px-3.5 py-1 rounded-full bg-white/20 text-xs font-mono font-bold"></div>
+          </div>
         </div>
 
         <div class="p-6 sm:p-10 space-y-8">
+          <!-- Google Sheets Live Sync Status Box -->
+          <div id="gsheet-sync-banner" class="p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <!-- Populated dynamically -->
+          </div>
+
           <!-- Respondent Profile Summary -->
           <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Ringkasan Profil Responden / Respondent Summary</h3>
@@ -625,7 +633,175 @@
     </div>
   </div>
 
+  <!-- =========================================================
+       MODAL: GOOGLE SHEETS INTEGRATION SETUP
+       ========================================================= -->
+  <div id="gsheet-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden card-enter">
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between gap-3 bg-emerald-50/70">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-ecoGreen">Integrasi Automatik / Auto-Sync</span>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-900">Tetapan Google Sheets / Google Sheets Setup</h3>
+        </div>
+        <button type="button" onclick="toggleGSheetModal(false)" class="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 transition-colors cursor-pointer" aria-label="Tutup">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6 overflow-y-auto space-y-5 text-sm">
+        <!-- Step 1: Paste Web App URL -->
+        <div class="space-y-2">
+          <label for="gsheet-url-input" class="block text-xs font-bold uppercase tracking-wider text-slate-700">
+            1. Tampal URL Web App Google Apps Script (Web App URL)
+          </label>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input
+              type="url"
+              id="gsheet-url-input"
+              placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+              class="flex-1 px-4 py-2.5 rounded-xl border-2 border-slate-300 focus:border-ecoGreen focus:ring-4 focus:ring-green-100 outline-none text-xs sm:text-sm font-mono text-slate-900"
+            />
+            <button type="button" onclick="saveGSheetUrl()" class="px-5 py-2.5 rounded-xl bg-ecoGreen hover:bg-green-800 text-white text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer shrink-0">
+              Simpan URL
+            </button>
+          </div>
+          <p class="text-xs text-slate-500">
+            URL ini disimpan dalam pelayar anda (atau boleh ditetapkan terus di dalam kod pada pemboleh ubah <code class="px-1 py-0.5 bg-slate-100 rounded text-uthmPurple font-mono">GOOGLE_SCRIPT_URL</code>).
+          </p>
+        </div>
+
+        <!-- Step 2: Instructions & Apps Script Code -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-uthmPurple">2. Kod Google Apps Script (Sedia Digunakan)</span>
+            <button type="button" onclick="copyAppsScriptCode()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-uthmPurple hover:bg-uthmPurpleDark text-white text-xs font-bold shadow-xs transition-all cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <span>Salin Kod Apps Script</span>
+            </button>
+          </div>
+
+          <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1">
+            <li>Buka Google Sheet <strong>Data Responden - Soal Selidik Kerangka Kemahiran Hijau TVET Elektronik</strong>.</li>
+            <li>Klik menu <strong>Extensions &rarr; Apps Script</strong>.</li>
+            <li>Padam kod sedia ada dan tampal kod di bawah, kemudian klik <strong>Deploy &rarr; New deployment</strong>.</li>
+            <li>Pilih jenis <strong>Web app</strong>, tetapkan <em>Execute as: Me</em> dan <em>Who has access: Anyone</em>, lalu salin <strong>Web app URL</strong> ke ruangan di atas.</li>
+          </ol>
+
+          <pre id="apps-script-code-block" class="p-3.5 rounded-xl bg-slate-900 text-green-300 text-[11px] font-mono overflow-x-auto leading-relaxed select-all">const SHEET_COLUMNS = [
+  "Timestamp","ID_Responden","A1_Jantina","A2_Umur","A3_Pendidikan",
+  "A4_Pengalaman_Mengajar","A5_Subjek_Modul_Utama","A6_Kolej_Vokasional",
+  "BA_1_0","BA_1_1","BA_1_2","BA_1_3","BA_1_4","BA_1_5","BA_1_6",
+  "BA_2_0","BA_2_1","BA_2_2","BA_2_3","BA_2_4","BA_Soalan_Terbuka",
+  "BB_1_0","BB_1_1","BB_1_2","BB_1_3","BB_1_4",
+  "BB_2_0","BB_2_1","BB_2_2","BB_2_3","BB_2_4",
+  "BB_3_0","BB_3_1","BB_3_2","BB_3_3","BB_3_4","BB_3_5",
+  "BB_4_0","BB_4_1","BB_4_2","BB_4_3","BB_4_4","BB_4_5","BB_4_6","BB_4_7",
+  "BB_5_0","BB_5_1","BB_5_2","BB_5_3","BB_5_4","BB_5_5",
+  "BB_6_0","BB_6_1","BB_6_2","BB_6_3","BB_6_4","BB_6_5",
+  "BB_7_0","BB_7_1","BB_7_2","BB_7_3","BB_7_4","BB_7_5","BB_7_6",
+  "BB_8_0","BB_8_1","BB_8_2","BB_8_3","BB_8_4","BB_8_5","BB_Soalan_Terbuka",
+  "BC_1_0","BC_1_1","BC_1_2","BC_1_3","BC_1_4","BC_1_5",
+  "BC_2_0","BC_2_1","BC_2_2","BC_2_3","BC_2_4","BC_2_5","BC_Soalan_Terbuka"
+];
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheets()[0];
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(SHEET_COLUMNS);
+    }
+    var raw = e.postData ? e.postData.contents : "{}";
+    var data = JSON.parse(raw);
+    var row = SHEET_COLUMNS.map(function(col) {
+      return data[col] !== undefined && data[col] !== null ? data[col] : "";
+    });
+    sheet.appendRow(row);
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "success", id: data.ID_Responden }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}</pre>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-3.5 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
+        <button type="button" onclick="clearGSheetUrl()" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer">
+          Kosongkan URL
+        </button>
+        <button type="button" onclick="toggleGSheetModal(false)" class="px-5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors cursor-pointer">
+          Selesai / Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // =========================================================================
+    // 0. GOOGLE APPS SCRIPT WEB APP URL CONFIGURATION
+    // =========================================================================
+    // Penyelidik boleh menampal URL Web App terus di sini atau melalui butang "Tetapan Google Sheets" di portal.
+    const GOOGLE_SCRIPT_URL = "";
+    const GSHEET_URL_STORAGE_KEY = 'uthm_green_skills_gsheet_url_v1';
+
+    // Exact 85 columns matching the Google Sheet schema
+    const GOOGLE_SHEET_COLUMNS = [
+      'Timestamp', 'ID_Responden',
+      'A1_Jantina', 'A2_Umur', 'A3_Pendidikan', 'A4_Pengalaman_Mengajar', 'A5_Subjek_Modul_Utama', 'A6_Kolej_Vokasional',
+      'BA_1_0', 'BA_1_1', 'BA_1_2', 'BA_1_3', 'BA_1_4', 'BA_1_5', 'BA_1_6',
+      'BA_2_0', 'BA_2_1', 'BA_2_2', 'BA_2_3', 'BA_2_4', 'BA_Soalan_Terbuka',
+      'BB_1_0', 'BB_1_1', 'BB_1_2', 'BB_1_3', 'BB_1_4',
+      'BB_2_0', 'BB_2_1', 'BB_2_2', 'BB_2_3', 'BB_2_4',
+      'BB_3_0', 'BB_3_1', 'BB_3_2', 'BB_3_3', 'BB_3_4', 'BB_3_5',
+      'BB_4_0', 'BB_4_1', 'BB_4_2', 'BB_4_3', 'BB_4_4', 'BB_4_5', 'BB_4_6', 'BB_4_7',
+      'BB_5_0', 'BB_5_1', 'BB_5_2', 'BB_5_3', 'BB_5_4', 'BB_5_5',
+      'BB_6_0', 'BB_6_1', 'BB_6_2', 'BB_6_3', 'BB_6_4', 'BB_6_5',
+      'BB_7_0', 'BB_7_1', 'BB_7_2', 'BB_7_3', 'BB_7_4', 'BB_7_5', 'BB_7_6',
+      'BB_8_0', 'BB_8_1', 'BB_8_2', 'BB_8_3', 'BB_8_4', 'BB_8_5', 'BB_Soalan_Terbuka',
+      'BC_1_0', 'BC_1_1', 'BC_1_2', 'BC_1_3', 'BC_1_4', 'BC_1_5',
+      'BC_2_0', 'BC_2_1', 'BC_2_2', 'BC_2_3', 'BC_2_4', 'BC_2_5', 'BC_Soalan_Terbuka'
+    ];
+
+    // Mapping from internal question IDs to exact Google Sheet column names
+    const QUESTION_TO_SHEET_COL = {
+      'D1': 'A1_Jantina',
+      'D2': 'A2_Umur',
+      'D3': 'A3_Pendidikan',
+      'D4': 'A4_Pengalaman_Mengajar',
+      'D5': 'A5_Subjek_Modul_Utama',
+      'D6': 'A6_Kolej_Vokasional',
+      'A1.0': 'BA_1_0', 'A1.1': 'BA_1_1', 'A1.2': 'BA_1_2', 'A1.3': 'BA_1_3', 'A1.4': 'BA_1_4', 'A1.5': 'BA_1_5', 'A1.6': 'BA_1_6',
+      'A2.0': 'BA_2_0', 'A2.1': 'BA_2_1', 'A2.2': 'BA_2_2', 'A2.3': 'BA_2_3', 'A2.4': 'BA_2_4',
+      'A_Open': 'BA_Soalan_Terbuka',
+      'B1.0': 'BB_1_0', 'B1.1': 'BB_1_1', 'B1.2': 'BB_1_2', 'B1.3': 'BB_1_3', 'B1.4': 'BB_1_4',
+      'B2.0': 'BB_2_0', 'B2.1': 'BB_2_1', 'B2.2': 'BB_2_2', 'B2.3': 'BB_2_3', 'B2.4': 'BB_2_4',
+      'B3.0': 'BB_3_0', 'B3.1': 'BB_3_1', 'B3.2': 'BB_3_2', 'B3.3': 'BB_3_3', 'B3.4': 'BB_3_4', 'B3.5': 'BB_3_5',
+      'B4.0': 'BB_4_0', 'B4.1': 'BB_4_1', 'B4.2': 'BB_4_2', 'B4.3': 'BB_4_3', 'B4.4': 'BB_4_4', 'B4.5': 'BB_4_5', 'B4.6': 'BB_4_6', 'B4.7': 'BB_4_7',
+      'B5.0': 'BB_5_0', 'B5.1': 'BB_5_1', 'B5.2': 'BB_5_2', 'B5.3': 'BB_5_3', 'B5.4': 'BB_5_4', 'B5.5': 'BB_5_5',
+      'B6.0': 'BB_6_0', 'B6.1': 'BB_6_1', 'B6.2': 'BB_6_2', 'B6.3': 'BB_6_3', 'B6.4': 'BB_6_4', 'B6.5': 'BB_6_5',
+      'B7.0': 'BB_7_0', 'B7.1': 'BB_7_1', 'B7.2': 'BB_7_2', 'B7.3': 'BB_7_3', 'B7.4': 'BB_7_4', 'B7.5': 'BB_7_5', 'B7.6': 'BB_7_6',
+      'B8.0': 'BB_8_0', 'B8.1': 'BB_8_1', 'B8.2': 'BB_8_2', 'B8.3': 'BB_8_3', 'B8.4': 'BB_8_4', 'B8.5': 'BB_8_5',
+      'B_Open': 'BB_Soalan_Terbuka',
+      'C1.0': 'BC_1_0', 'C1.1': 'BC_1_1', 'C1.2': 'BC_1_2', 'C1.3': 'BC_1_3', 'C1.4': 'BC_1_4', 'C1.5': 'BC_1_5',
+      'C2.0': 'BC_2_0', 'C2.1': 'BC_2_1', 'C2.2': 'BC_2_2', 'C2.3': 'BC_2_3', 'C2.4': 'BC_2_4', 'C2.5': 'BC_2_5',
+      'C_Open': 'BC_Soalan_Terbuka'
+    };
+
     // =========================================================================
     // 1. COMPLETE QUESTIONNAIRE DATASET (Exact order & wording from UTHM PhD doc)
     // =========================================================================
@@ -1806,10 +1982,162 @@
       language: 'bilingual', // 'bilingual' | 'bm' | 'en'
       autoAdvance: true,
       answers: {}, // { [questionId]: value }
-      submittedAt: null
+      submittedAt: null,
+      respondentId: null,
+      syncStatus: 'idle', // 'idle' | 'syncing' | 'synced' | 'unconfigured' | 'error'
+      syncErrorMsg: ''
     };
 
     let autoAdvanceTimer = null;
+
+    function getActiveGSheetUrl() {
+      const saved = (localStorage.getItem(GSHEET_URL_STORAGE_KEY) || '').trim();
+      if (saved) return saved;
+      return (GOOGLE_SCRIPT_URL || '').trim();
+    }
+
+    function updateGSheetIndicators() {
+      const url = getActiveGSheetUrl();
+      const dot = document.getElementById('gsheet-status-dot');
+      const welcomeInd = document.getElementById('welcome-gsheet-indicator');
+      if (dot) {
+        dot.className = url
+          ? 'w-2 h-2 rounded-full bg-ecoGreen animate-pulse'
+          : 'w-2 h-2 rounded-full bg-amber-500';
+      }
+      if (welcomeInd) {
+        welcomeInd.innerHTML = url
+          ? '<span class="text-ecoGreen font-semibold">● Google Sheets Aktif (Auto-Sync)</span>'
+          : '<span class="text-amber-700">● URL Google Sheets belum ditetapkan (Simpanan Tempatan / CSV)</span>';
+      }
+    }
+
+    function toggleGSheetModal(show) {
+      const modal = document.getElementById('gsheet-modal');
+      if (!show) {
+        modal.classList.add('hidden');
+        return;
+      }
+      const input = document.getElementById('gsheet-url-input');
+      if (input) {
+        input.value = getActiveGSheetUrl();
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function saveGSheetUrl() {
+      const input = document.getElementById('gsheet-url-input');
+      const val = (input.value || '').trim();
+      if (val && !val.startsWith('https://script.google.com/')) {
+        showToast('Sila masukkan URL sah bermula dengan https://script.google.com/...', 'warning');
+        return;
+      }
+      localStorage.setItem(GSHEET_URL_STORAGE_KEY, val);
+      updateGSheetIndicators();
+      toggleGSheetModal(false);
+      showToast(val ? 'URL Google Sheets berjaya disimpan!' : 'URL Google Sheets dikosongkan.', 'success');
+      if (state.currentView === 'complete') {
+        renderCompleteScreen();
+      }
+    }
+
+    function clearGSheetUrl() {
+      localStorage.removeItem(GSHEET_URL_STORAGE_KEY);
+      const input = document.getElementById('gsheet-url-input');
+      if (input) input.value = '';
+      updateGSheetIndicators();
+      showToast('URL Google Sheets telah dipadam.', 'info');
+      if (state.currentView === 'complete') {
+        renderCompleteScreen();
+      }
+    }
+
+    function copyAppsScriptCode() {
+      const codeEl = document.getElementById('apps-script-code-block');
+      const text = codeEl ? codeEl.textContent : '';
+      const tempArea = document.createElement('textarea');
+      tempArea.value = text;
+      tempArea.style.position = 'fixed';
+      tempArea.style.left = '-9999px';
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('Kod Google Apps Script berjaya disalin!', 'success');
+      } catch (err) {
+        showToast('Gagal menyalin kod secara automatik.', 'error');
+      }
+      document.body.removeChild(tempArea);
+    }
+
+    function generateRespondentId() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      const stamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+      const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+      return `UTHM-${stamp}-${rand}`;
+    }
+
+    function buildGoogleSheetPayload() {
+      if (!state.respondentId) {
+        state.respondentId = generateRespondentId();
+      }
+      const isoTimestamp = new Date().toISOString();
+      const payload = {
+        Timestamp: isoTimestamp,
+        ID_Responden: state.respondentId
+      };
+
+      // Map all 78 survey questions to the exact 85 Google Sheet columns
+      SURVEY_QUESTIONS.forEach(q => {
+        const colName = QUESTION_TO_SHEET_COL[q.id];
+        if (colName) {
+          const val = state.answers[q.id];
+          payload[colName] = (val !== undefined && val !== null) ? val : '';
+        }
+      });
+
+      return payload;
+    }
+
+    async function sendToGoogleSheets() {
+      const url = getActiveGSheetUrl();
+      if (!url) {
+        state.syncStatus = 'unconfigured';
+        state.syncErrorMsg = 'URL Google Apps Script belum ditetapkan.';
+        saveState();
+        return false;
+      }
+
+      state.syncStatus = 'syncing';
+      state.syncErrorMsg = '';
+      if (state.currentView === 'complete') {
+        renderCompleteScreen();
+      }
+
+      const payload = buildGoogleSheetPayload();
+
+      try {
+        // Use text/plain with no-cors so Google Apps Script Web App accepts cross-origin POST reliably without preflight failure
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        state.syncStatus = 'synced';
+        saveState();
+        return true;
+      } catch (err) {
+        state.syncStatus = 'error';
+        state.syncErrorMsg = err && err.message ? err.message : 'Ralat sambungan rangkaian.';
+        saveState();
+        return false;
+      }
+    }
 
     function loadState() {
       try {
@@ -1822,6 +2150,8 @@
             state.language = parsed.language || 'bilingual';
             state.autoAdvance = typeof parsed.autoAdvance === 'boolean' ? parsed.autoAdvance : true;
             state.submittedAt = parsed.submittedAt || null;
+            state.respondentId = parsed.respondentId || null;
+            state.syncStatus = parsed.syncStatus || 'idle';
           }
         }
       } catch (err) {
@@ -1836,7 +2166,9 @@
           currentIndex: state.currentIndex,
           language: state.language,
           autoAdvance: state.autoAdvance,
-          submittedAt: state.submittedAt
+          submittedAt: state.submittedAt,
+          respondentId: state.respondentId,
+          syncStatus: state.syncStatus
         }));
         const badge = document.getElementById('autosave-badge');
         if (badge) {
@@ -2514,28 +2846,23 @@
           const val = state.answers[q.id];
           const hasVal = val !== undefined && val !== null && String(val).trim() !== '';
 
-          let displayVal = '<span class="text-rose-600 font-semibold italic">Belum dijawab</span>';
-          if (hasVal) {
-            if (q.type === 'likert') {
-              const found = LIKERT_OPTIONS.find(o => o.value === Number(val));
-              displayVal = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-green-50 text-ecoGreen border border-green-200 font-bold text-xs">Skala ${val} (${found ? found.code : ''}) - ${found ? found.bm : ''}</span>`;
-            } else {
-              displayVal = `<span class="font-semibold text-slate-800">${escapeHTML(String(val))}</span>`;
-            }
-          } else if (!q.required) {
-            displayVal = '<span class="text-slate-400 italic">Tiada catatan (Pilihan)</span>';
-          }
-
           const row = document.createElement('div');
-          row.className = 'px-5 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-slate-50';
+          row.className = 'px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-slate-50 transition-colors';
+
+          const displayVal = hasVal
+            ? `<span class="px-2.5 py-1 rounded-lg bg-green-50 text-ecoGreen border border-green-200 text-xs font-bold">${escapeHTML(String(val))}</span>`
+            : q.required
+              ? `<span class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold">Belum Dijawab</span>`
+              : `<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-500 text-xs font-medium">Tiada / Dilangkau</span>`;
+
           row.innerHTML = `
             <div class="text-xs sm:text-sm text-slate-700 pr-2">
-              <span class="font-bold text-uthmPurple mr-1.5">[${q.code}]</span>
-              <span>${state.language === 'en' ? q.en : q.bm}</span>
+              <span class="font-bold text-slate-900 mr-1.5">${q.code}</span>
+              <span>${escapeHTML(state.language === 'en' ? q.en : q.bm)}</span>
             </div>
-            <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-              <div class="text-xs">${displayVal}</div>
-              <button type="button" onclick="jumpToQuestion(${idx})" class="px-2.5 py-1 rounded-lg border border-slate-300 bg-white hover:border-uthmPurple text-uthmPurple text-xs font-bold transition-colors cursor-pointer">
+            <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+              ${displayVal}
+              <button type="button" onclick="jumpToQuestion(${idx})" class="px-2.5 py-1 rounded-lg border border-slate-300 bg-white hover:border-uthmPurple text-uthmPurple text-xs font-semibold transition-colors cursor-pointer">
                 Ubah
               </button>
             </div>
@@ -2548,7 +2875,7 @@
       });
     }
 
-    function submitSurvey() {
+    async function submitSurvey() {
       const missingRequired = SURVEY_QUESTIONS
         .map((q, idx) => ({ q, idx }))
         .filter(({ q }) => {
@@ -2564,15 +2891,51 @@
         return;
       }
 
+      const submitBtn = document.getElementById('btn-submit-survey');
+      const submitLabel = document.getElementById('btn-submit-label');
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Menghantar data... / Submitting...';
+
+      if (!state.respondentId) {
+        state.respondentId = generateRespondentId();
+      }
       state.submittedAt = new Date().toLocaleString('ms-MY', {
         dateStyle: 'full',
         timeStyle: 'short'
       });
+
+      const ok = await sendToGoogleSheets();
       saveState();
+
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitLabel) submitLabel.textContent = 'Hantar Jawapan / Submit Responses';
 
       showView('complete');
       renderCompleteScreen();
-      showToast('Soal selidik berjaya dihantar! Terima kasih.', 'success');
+
+      if (ok) {
+        showToast('Jawapan berjaya dihantar ke Google Sheets! Terima kasih.', 'success');
+      } else if (state.syncStatus === 'unconfigured') {
+        showToast('Jawapan disimpan secara tempatan. Sila tetapkan URL Google Sheets untuk auto-hantar.', 'warning');
+      } else {
+        showToast('Jawapan disimpan tempatan, tetapi gagal disegerakkan ke Google Sheets.', 'error');
+      }
+    }
+
+    async function retryGoogleSheetSync() {
+      const url = getActiveGSheetUrl();
+      if (!url) {
+        toggleGSheetModal(true);
+        showToast('Sila tampal URL Web App Google Apps Script terlebih dahulu.', 'info');
+        return;
+      }
+      const ok = await sendToGoogleSheets();
+      renderCompleteScreen();
+      if (ok) {
+        showToast('Berjaya menghantar data ke Google Sheets!', 'success');
+      } else {
+        showToast('Penghantaran semula gagal. Sila semak sambungan internet atau URL.', 'error');
+      }
     }
 
     // =========================================================================
@@ -2600,6 +2963,85 @@
 
     function renderCompleteScreen() {
       document.getElementById('submission-timestamp').textContent = `Tarikh & Masa Hantar: ${state.submittedAt || new Date().toLocaleString('ms-MY')}`;
+      document.getElementById('respondent-id-badge').textContent = `ID: ${state.respondentId || generateRespondentId()}`;
+
+      // Render Google Sheets Sync Status Banner
+      const syncBanner = document.getElementById('gsheet-sync-banner');
+      if (syncBanner) {
+        if (state.syncStatus === 'syncing') {
+          syncBanner.className = 'p-5 rounded-2xl border border-blue-300 bg-blue-50 flex items-center gap-3.5';
+          syncBanner.innerHTML = `
+            <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 animate-pulse">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-blue-950">Sedang Menghantar ke Google Sheets...</h3>
+              <p class="text-xs text-blue-800 mt-0.5">Sila tunggu sebentar sementara rekod responden dimuat naik.</p>
+            </div>
+          `;
+        } else if (state.syncStatus === 'synced') {
+          syncBanner.className = 'p-5 rounded-2xl border border-green-300 bg-green-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4';
+          syncBanner.innerHTML = `
+            <div class="flex items-start gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-ecoGreen text-white flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-green-950">Rekod Berjaya Dihantar ke Google Sheets!</h3>
+                <p class="text-xs text-green-800 mt-0.5">Data responden (85 lajur penuh) telah disegerakkan ke hamparan Google Sheet penyelidik.</p>
+              </div>
+            </div>
+            <button type="button" onclick="retryGoogleSheetSync()" class="self-start sm:self-center px-3.5 py-2 rounded-xl bg-white border border-green-300 text-ecoGreen hover:bg-green-100 text-xs font-bold transition-colors cursor-pointer shrink-0">
+              Hantar Semula / Re-sync
+            </button>
+          `;
+        } else if (state.syncStatus === 'unconfigured') {
+          syncBanner.className = 'p-5 rounded-2xl border border-amber-300 bg-amber-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4';
+          syncBanner.innerHTML = `
+            <div class="flex items-start gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-amber-950">Disimpan Secara Tempatan (URL Google Sheets Belum Ditetapkan)</h3>
+                <p class="text-xs text-amber-800 mt-0.5">Tetapkan Web App URL Google Apps Script untuk menghantar terus ke Google Sheet, atau muat turun fail CSV di bawah.</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button type="button" onclick="toggleGSheetModal(true)" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors cursor-pointer">
+                Tetapkan URL
+              </button>
+              <button type="button" onclick="retryGoogleSheetSync()" class="px-3.5 py-2 rounded-xl bg-white border border-amber-300 text-amber-900 hover:bg-amber-100 text-xs font-bold transition-colors cursor-pointer">
+                Cuba Hantar Semula
+              </button>
+            </div>
+          `;
+        } else {
+          syncBanner.className = 'p-5 rounded-2xl border border-rose-300 bg-rose-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4';
+          syncBanner.innerHTML = `
+            <div class="flex items-start gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-rose-950">Penghantaran ke Google Sheets Tergendala</h3>
+                <p class="text-xs text-rose-800 mt-0.5">Jawapan anda selamat disimpan di dalam pelayar ini. Sila tekan butang di sebelah untuk mencuba semula.</p>
+              </div>
+            </div>
+            <button type="button" onclick="retryGoogleSheetSync()" class="self-start sm:self-center px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors cursor-pointer shrink-0">
+              Cuba Hantar Semula / Retry Sync
+            </button>
+          `;
+        }
+      }
 
       // Profile summary
       const profileGrid = document.getElementById('complete-profile-grid');
@@ -2658,18 +3100,15 @@
     }
 
     function exportCSV() {
-      const headers = ['Timestamp', ...SURVEY_QUESTIONS.map(q => q.id)];
-      const row = [
-        `"${(state.submittedAt || new Date().toISOString()).replace(/"/g, '""')}"`,
-        ...SURVEY_QUESTIONS.map(q => {
-          const val = state.answers[q.id] !== undefined ? String(state.answers[q.id]) : '';
-          return `"${val.replace(/"/g, '""')}"`;
-        })
-      ];
+      const payload = buildGoogleSheetPayload();
+      const row = GOOGLE_SHEET_COLUMNS.map(col => {
+        const val = payload[col] !== undefined && payload[col] !== null ? String(payload[col]) : '';
+        return `"${val.replace(/"/g, '""')}"`;
+      });
 
-      const csvContent = '\uFEFF' + headers.join(',') + '\n' + row.join(',');
-      downloadFile(csvContent, 'UTHM_Green_Skills_TVET_Response.csv', 'text/csv;charset=utf-8;');
-      showToast('Fail CSV berjaya dimuat turun.', 'success');
+      const csvContent = '\uFEFF' + GOOGLE_SHEET_COLUMNS.join(',') + '\n' + row.join(',');
+      downloadFile(csvContent, `UTHM_Green_Skills_${state.respondentId || 'Response'}.csv`, 'text/csv;charset=utf-8;');
+      showToast('Fail CSV (85 lajur sepadan Google Sheet) berjaya dimuat turun.', 'success');
     }
 
     function exportJSON() {
@@ -2677,16 +3116,17 @@
         studyTitle: 'PEMBANGUNAN KERANGKA KEMAHIRAN HIJAU UNTUK KURIKULUM PROGRAM TEKNOLOGI ELEKTRONIK TVET',
         institution: 'Universiti Tun Hussein Onn Malaysia (UTHM)',
         researcher: 'Adib Farhan bin Zaime',
+        respondentId: state.respondentId,
         submittedAt: state.submittedAt || new Date().toISOString(),
         summaryMeans: {
           partA_Knowledge: computeSectionMean('PART_A').mean,
           partB_Skills: computeSectionMean('PART_B').mean,
           partC_AttitudeValues: computeSectionMean('PART_C').mean
         },
-        responses: state.answers
+        sheetRow: buildGoogleSheetPayload()
       };
 
-      downloadFile(JSON.stringify(payload, null, 2), 'UTHM_Green_Skills_TVET_Response.json', 'application/json');
+      downloadFile(JSON.stringify(payload, null, 2), `UTHM_Green_Skills_${state.respondentId || 'Response'}.json`, 'application/json');
       showToast('Fail JSON berjaya dimuat turun.', 'success');
     }
 
@@ -2751,6 +3191,9 @@
       state.answers = {};
       state.currentIndex = 0;
       state.submittedAt = null;
+      state.respondentId = null;
+      state.syncStatus = 'idle';
+      state.syncErrorMsg = '';
       closeResetModal();
       document.getElementById('resume-banner').classList.add('hidden');
       showView('welcome');
@@ -2802,6 +3245,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
       setLanguage(state.language);
+      updateGSheetIndicators();
 
       const autoAdvCheckbox = document.getElementById('toggle-auto-advance');
       if (autoAdvCheckbox) {
